@@ -15,29 +15,6 @@ from ..utils import CSPLayer
 
 @MODELS.register_module()
 class CSPNeXtPAFPN(BaseModule):
-    """Path Aggregation Network with CSPNeXt blocks. Modified from RTMDet.
-
-    Args:
-        in_channels (Sequence[int]): Number of input channels per scale.
-        out_channels (int): Number of output channels (used at each scale)
-        out_indices (Sequence[int]): Output from which stages.
-        num_csp_blocks (int): Number of bottlenecks in CSPLayer.
-            Defaults to 3.
-        use_depthwise (bool): Whether to use depthwise separable convolution in
-            blocks. Defaults to False.
-        expand_ratio (float): Ratio to adjust the number of channels of the
-            hidden layer. Default: 0.5
-        upsample_cfg (dict): Config dict for interpolate layer.
-            Default: `dict(scale_factor=2, mode='nearest')`
-        conv_cfg (dict, optional): Config dict for convolution layer.
-            Default: None, which means using conv2d.
-        norm_cfg (dict): Config dict for normalization layer.
-            Default: dict(type='BN')
-        act_cfg (dict): Config dict for activation layer.
-            Default: dict(type='Swish')
-        init_cfg (dict or list[dict], optional): Initialization config dict.
-            Default: None.
-    """
 
     def __init__(
         self,
@@ -179,9 +156,9 @@ class CSPNeXtPAFPN(BaseModule):
                 torch.cat([downsample_feat, feat_high], 1))
             outs.append(out)
 
-        if self.out_channels is not None:
-            # out convs
-            for idx, conv in enumerate(self.out_convs):
-                outs[idx] = conv(outs[idx])
+        # if self.out_channels is not None:
+        #     # out convs
+        #     for idx, conv in enumerate(self.out_convs):
+        #         outs[idx] = conv(outs[idx])
 
         return tuple([outs[i] for i in self.out_indices])
